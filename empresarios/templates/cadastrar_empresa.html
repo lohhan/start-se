@@ -14,13 +14,13 @@
 <div class="container">
    <br>
    <br>
-      {% if messages %}
-         {% for message in messages %}
-            <section class="alert {{message.tags}}">
-               {{message}}
-            </section>
-         {% endfor %}
-      {% endif %}
+   {% if messages %}
+   {% for message in messages %}
+   <section class="alert {{message.tags}}">
+      {{message}}
+   </section>
+   {% endfor %}
+   {% endif %}
    <div class="row">
       <div class="col-md">
          <form action="{% url "cadastrar_empresa" %}" method="POST" enctype='multipart/form-data'> {% csrf_token %}
@@ -36,7 +36,7 @@
             <label>A quanto tempo a startup existe ?</label>
             <select name="tempo_existencia" class="form-select">
                {% for i in tempo_existencia %}
-                  <option value="{{i.0}}">{{i.1}}</option>
+               <option value="{{i.0}}">{{i.1}}</option>
                {% endfor %}
             </select>
             <br>
@@ -47,7 +47,7 @@
             <input type="date" name="data_final" class="form-control">
             <br>
             <label>Qual a porcentagem (%) de equity oferecida em contrapartida ao valor investido?</label>
-            <input type="number" name="percentual_equity" class="form-control">
+            <input type="number" min="0" max="100" name="percentual_equity" class="form-control">
             <input type="submit" class="btn btn-lg btn-indigo" value="cadastrar">
 
       </div>
@@ -57,8 +57,8 @@
          <br>
          <br>
          {% for i in estagio %}
-            <input type="checkbox" name="estagio" value="{{i.0}}"><span>&nbsp&nbsp {{i.1}}</span>
-            <br>
+         <input type="checkbox" name="estagio" value="{{i.0}}"><span>&nbsp&nbsp {{i.1}}</span>
+         <br>
          {% endfor %}
 
          {% comment %} <input type="checkbox" name="estagio" value="I"><span>&nbsp&nbsp Tenho apenas uma ideia</span>
@@ -72,7 +72,7 @@
          <label>Qual área sua startup está inseria ?</label>
          <select name="area" class="form-select">
             {% for i in area %}
-               <option value="{{i.0}}">{{i.1}}</option>
+            <option value="{{i.0}}">{{i.1}}</option>
             {% endfor %}
          </select>
          <br>
@@ -82,7 +82,7 @@
             <option value="B2B">B2B</option>
          </select>
          <br>
-         <label>Qual valor deseja captar ?</label>
+         <label>Qual valor deseja captar?</label>
          <input type="number" name="valor" class="form-control">
          <br>
          <label>Envie o pitch de apresentação</label>

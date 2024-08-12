@@ -5,7 +5,11 @@ from django.contrib.messages import constants
 
 def cadastrar_empresa(request):
    if request.method == "GET":
+      if not request.user.is_authenticated:
+         return redirect('/usuarios/logar')
+
       return render(request, 'cadastrar_empresa.html', {"tempo_existencia": Empresas.tempo_existencia_choices, "estagio": Empresas.estagio_choices, "area": Empresas.area_choices})
+   
    elif request.method == "POST":
       nome = request.POST.get('nome')
       cnpj = request.POST.get('cnpj')
@@ -19,7 +23,12 @@ def cadastrar_empresa(request):
       publico_alvo = request.POST.get('publico_alvo')
       valor = request.POST.get('valor')
       pitch = request.FILES.get('pitch')
-      logo = request.FILES.get('logo')
+      logo = request.FILES.get('logo') 
+
+      if not (nome and cnpj and site and tempo_existencia and descricao and data_final and percentual_equity and estagio and area and publico_alvo and valor and pitch and logo):
+         messages.add_message(request, constants.ERROR, 'Todos os campos devem ser preenchidos.')
+         return redirect('/empresarios/cadastrar_empresa')
+      
 
    try:
       empresa = Empresas(
@@ -42,7 +51,7 @@ def cadastrar_empresa(request):
       
    except: 
       messages.add_message(request, constants.ERROR, 'Erro interno do servidor.')
-   
-   
+      return redirect('/empresarios/cadastrar_empresa')
+         
    messages.add_message(request, constants.SUCCESS, 'Empresa criada com sucesso.')
    return redirect('/empresarios/cadastrar_empresa')

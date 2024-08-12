@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect # pega o html e renderiza ele
+from django.shortcuts import render, redirect 
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -8,6 +8,7 @@ from django.contrib import auth
 def cadastro(request):
    if request.method == "GET":
       return render(request, 'cadastro.html') 
+   
    elif request.method == "POST":
       username = request.POST.get("username")
       senha = request.POST.get("senha")
