@@ -26,4 +26,4 @@ def sugestao(request):
          if percentual >= 1:
             empresas_selecionadas.append(empresa)
 
-      return render(request, 'sugestao.html', {"areas": areas, "empresas": empresas})
+      return render(request, 'sugestao.html', {"areas": areas, "empresas": empresas_selecionadas})
