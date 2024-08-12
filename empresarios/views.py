@@ -28,7 +28,6 @@ def cadastrar_empresa(request):
       if not (nome and cnpj and site and tempo_existencia and descricao and data_final and percentual_equity and estagio and area and publico_alvo and valor and pitch and logo):
          messages.add_message(request, constants.ERROR, 'Todos os campos devem ser preenchidos.')
          return redirect('/empresarios/cadastrar_empresa')
-      
 
    try:
       empresa = Empresas(
