@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from .models import Empresas, Documento, Metricas
+from investidores.models import PropostaInvestimento
 from django.contrib import messages
 from django.contrib.messages import constants
+from django.http import HttpResponse
 
 def cadastrar_empresa(request):
    if not request.user.is_authenticated:
@@ -29,31 +31,31 @@ def cadastrar_empresa(request):
          messages.add_message(request, constants.ERROR, 'Todos os campos devem ser preenchidos.')
          return redirect('/empresarios/cadastrar_empresa')
 
-   try:
-      empresa = Empresas(
-         user=request.user,
-         nome=nome,
-         cnpj=cnpj,
-         site=site,
-         tempo_existencia=tempo_existencia,
-         descricao=descricao,
-         data_final_captacao=data_final,
-         percentual_equity=percentual_equity,
-         estagio=estagio,
-         area=area,
-         publico_alvo=publico_alvo,
-         valor=valor,
-         pitch=pitch,
-         logo=logo
-      )
-      empresa.save()
-      
-   except: 
-      messages.add_message(request, constants.ERROR, 'Erro interno do servidor.')
-      return redirect('/empresarios/cadastrar_empresa')
+      try:
+         empresa = Empresas(
+            user=request.user,
+            nome=nome,
+            cnpj=cnpj,
+            site=site,
+            tempo_existencia=tempo_existencia,
+            descricao=descricao,
+            data_final_captacao=data_final,
+            percentual_equity=percentual_equity,
+            estagio=estagio,
+            area=area,
+            publico_alvo=publico_alvo,
+            valor=valor,
+            pitch=pitch,
+            logo=logo
+         )
+         empresa.save()
          
-   messages.add_message(request, constants.SUCCESS, 'Empresa criada com sucesso.')
-   return redirect('/empresarios/cadastrar_empresa')
+      except: 
+         messages.add_message(request, constants.ERROR, 'Erro interno do servidor.')
+         return redirect('/empresarios/cadastrar_empresa')
+            
+      messages.add_message(request, constants.SUCCESS, 'Empresa criada com sucesso.')
+      return redirect('/empresarios/cadastrar_empresa')
 
 def listar_empresas(request):
    if not request.user.is_authenticated:
@@ -71,7 +73,15 @@ def empresa(request, id):
 
    if request.method == "GET":
       documentos = Documento.objects.filter(empresa=empresa)
-      return render(request, "empresa.html", {"empresa": empresa, "documentos": documentos})
+
+      propostas_investimentos = PropostaInvestimento.objects.filter(empresa=empresa)
+      propostas_investimentos_enviadas = propostas_investimentos.filter(status="PE")
+
+      percentual_vendido = sum(propostas_investimentos.filter(status="PA").values_list("percentual", flat=True))
+      total_captado = sum(propostas_investimentos.filter(status="PA").values_list("valor", flat=True))
+      valuation_atual = (100 * float(total_captado)) / float(percentual_vendido) if percentual_vendido != 0 else 0
+
+      return render(request, "empresa.html", {"empresa": empresa, "documentos": documentos, "propostas_investimentos_enviadas": propostas_investimentos_enviadas, "percentual_vendido": int(percentual_vendido), "total_captado": total_captado, "valuation_atual": round(valuation_atual, 2)})
    
 def add_doc(request, id):  
    empresa = Empresas.objects.get(id=id)
@@ -134,3 +144,17 @@ def add_metrica(request, id):
    
    messages.add_message(request, constants.SUCCESS, 'Métrica cadastrada com sucesso.')
    return redirect(f'/empresarios/empresa/{empresa.id}')
+
+def gerenciar_proposta(request, id):
+   acao = request.GET.get('acao')
+   pi = PropostaInvestimento.objects.get(id=id)
+
+   if acao == "aceitar":
+      messages.add_message(request, constants.SUCCESS, 'Proposta aceita com sucesso.')
+      pi.status = "PA"
+   elif acao == "negar":
+      messages.add_message(request, constants.SUCCESS, 'Proposta recusada com sucesso.')
+      pi.status = "PR"
+
+   pi.save()
+   return redirect(f'/empresarios/empresa/{pi.empresa.id}')

@@ -33,7 +33,7 @@
             <label>Site</label>
             <input type="text" name="site" placeholder="Digite o seu site ..." class="form-control">
             <br>
-            <label>A quanto tempo a startup existe ?</label>
+            <label>A quanto tempo a startup existe?</label>
             <select name="tempo_existencia" class="form-select">
                {% for i in tempo_existencia %}
                <option value="{{i.0}}">{{i.1}}</option>
@@ -53,7 +53,7 @@
       </div>
       <div class="col-md">
          <br>
-         <label>Qual o estágio da empresa ?</label>
+         <label>Qual o estágio da empresa?</label>
          <br>
          <br>
          {% for i in estagio %}
@@ -69,7 +69,7 @@
          <br>
          <input type="checkbox" name="estagio" value="E"><span>&nbsp&nbsp Empresa pronta para escalar </span> {% endcomment %}
          <br>
-         <label>Qual área sua startup está inseria ?</label>
+         <label>Qual área sua startup está inserida?</label>
          <select name="area" class="form-select">
             {% for i in area %}
             <option value="{{i.0}}">{{i.1}}</option>

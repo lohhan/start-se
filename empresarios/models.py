@@ -32,11 +32,11 @@ class Empresas(models.Model):
     tempo_existencia = models.CharField(max_length=2, choices=tempo_existencia_choices, default='-6')
     descricao = models.TextField() 
     data_final_captacao = models.DateField()
-    percentual_equity = models.IntegerField() # Percentual esperado
+    percentual_equity = models.IntegerField() 
     estagio = models.CharField(max_length=4, choices=estagio_choices, default='I')
     area = models.CharField(max_length=3, choices=area_choices)
     publico_alvo = models.CharField(max_length=3)
-    valor = models.DecimalField(max_digits=9, decimal_places=2) # Valor total a ser vendido
+    valor = models.DecimalField(max_digits=9, decimal_places=2) 
     pitch = models.FileField(upload_to='pitchs')
     logo = models.FileField(upload_to='logo')
 
