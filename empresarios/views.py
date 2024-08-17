@@ -3,7 +3,6 @@ from .models import Empresas, Documento, Metricas
 from investidores.models import PropostaInvestimento
 from django.contrib import messages
 from django.contrib.messages import constants
-from django.http import HttpResponse
 
 def cadastrar_empresa(request):
    if not request.user.is_authenticated:
@@ -63,13 +62,12 @@ def listar_empresas(request):
 
    if request.method == "GET":
       empresas = Empresas.objects.filter(user=request.user)
-      nome_empresas = empresas.values_list("nome", flat=True)
-      tag_empresa = request.GET.get('empresa')
+      nome_empresas = request.GET.get('empresa')
       
-      if tag_empresa in nome_empresas:
-         empresas = empresas.filter(nome=tag_empresa)
+      if nome_empresas:
+         empresas = empresas.filter(nome__icontains=nome_empresas)
 
-      return render(request, 'listar_empresas.html', {'empresas': empresas})
+      return render(request, 'listar_empresas.html', {'empresas': empresas, "nome_empresas": nome_empresas})
    
 def empresa(request, id):
    empresa = Empresas.objects.get(id=id)

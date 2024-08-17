@@ -5,7 +5,7 @@ from django.http import HttpResponse, Http404
 from django.contrib import messages
 from django.contrib.messages import constants
 
-# Create your views here.
+
 def sugestao(request):
    if not request.user.is_authenticated:
       return redirect('/usuarios/logar')
@@ -29,7 +29,8 @@ def sugestao(request):
          empresas = Empresas.objects.filter(estagio="MVPP").filter(tempo_existencia__in=["+6", "+1", "+5"])
       elif tipo == "JE":
          empresas = Empresas.objects.filter(tempo_existencia__in=["-6", "+6", "+1"])
-
+      elif tipo == "G":
+         empresas = Empresas.objects.all()
 
       empresas = empresas.filter(area__in=area)
       
@@ -86,7 +87,7 @@ def realizar_proposta(request, id):
          valor=valor,
          percentual=percentual,  
          empresa=empresa,
-         investidor=request.user
+         investidor=request.user,
       )
       pi.save()
    except:
@@ -117,5 +118,4 @@ def assinar_contrato(request, id):
 
       messages.add_message(request, constants.SUCCESS, f'Contrato assinado com sucesso, sua proposta foi enviada a empresa.')
       return redirect(f'/investidores/ver_empresa/{pi.empresa.id}')
-   
    
