@@ -24,7 +24,7 @@ Este projeto é um sistema de captação de investimentos para empresários, des
 2. Navegue até a pasta do projeto:
    ```bash
     cd start-se
-    
+   
 3. Crie um ambiente virtual:
    ```bash
    python -m venv venv
